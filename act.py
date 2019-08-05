@@ -1,3 +1,14 @@
+def train(env, agent):
+    """
+    Performs the main training loop.
+    """
+    score = 0  # initialize score
+
+    # TODO
+
+    return score
+
+
 def run_episode(env, agent):
     """
     Shows a UnityAgent perform a single episode in the specified Unity ML environment.

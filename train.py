@@ -1,16 +1,8 @@
 import config
 
 from unityagents import UnityEnvironment
-
-
-def train(env, brain_name):
-    """
-    Performs the main DQN training loop.
-    """
-    score = 0  # initialize score
-
-    return score
-
+from act import train
+from agent.dqn import DqnAgent
 
 if __name__ == '__main__':
     """
@@ -18,13 +10,23 @@ if __name__ == '__main__':
     """
     print('training a new agent to master {}'.format(config.ENV_APP))
 
-    banana_env = UnityEnvironment(file_name=config.ENV_APP)  # Create the Unity environment
+    # Create the Unity environment
+    banana_env = UnityEnvironment(file_name=config.ENV_APP)
 
-    # TODO: create a new DQN agent
+    # Select the brain (= Unity ML agent) to work with and examine action space
+    brain_name = banana_env.brain_names[0]
+    brain = banana_env.brains[brain_name]
+    action_size = brain.vector_action_space_size
+
+    # Examine state space
+    env_info = banana_env.reset(train_mode=True)[brain_name]
+    state_size = len(env_info.vector_observations[0])
+
+    # Create a new agent - TODO: command line agent type selection
+    agent = DqnAgent(brain_name, state_size, action_size)
 
     # Train the agent
-    result = train(banana_env,
-                   banana_env.brain_names[0])
+    result = train(banana_env, agent)
 
     banana_env.close()  # Close the environment, no longer needed
 

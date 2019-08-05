@@ -1,6 +1,6 @@
 # DRL Navigation - Banana Environment
 
-This project applies Deep Reinforcement Learning (more specifically a DQN algorithm) on a Unity ML Agent.
+This project applies Deep Reinforcement Learning on the Unity ML agents Banana environment.
 
 More information on the algorithm, NN architecture and hyper-parameters can be found [in a separate report](Report.md).
 
