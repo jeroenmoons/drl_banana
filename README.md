@@ -46,6 +46,10 @@ ENV_APP constant in `config.py`.
 There are two ways to run the project. One trains an agent from scratch, the other shows you a pre-trained agent 
 performing.
 
+#### Watching a random agent
+
+Run random_sample.py to watch a 100% stupid agent perform random actions.
+
 #### Training an agent
 
 TODO
