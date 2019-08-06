@@ -4,6 +4,7 @@ from unityagents import UnityEnvironment
 from act import train
 from agent.dqn import DqnAgent
 
+
 if __name__ == '__main__':
     """
     This runs a randomly acting agent, completely ignoring the state and picking a random action at each time step.
