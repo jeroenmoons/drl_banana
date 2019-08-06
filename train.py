@@ -1,5 +1,6 @@
 import config
 
+import numpy as np
 from unityagents import UnityEnvironment
 from act import train
 from agent.dqn import DqnAgent
@@ -55,3 +56,4 @@ if __name__ == '__main__':
     banana_env.close()
 
     print("Last 100 scores: {}".format(result[-100:]))
+    print("Max score: {}".format(np.array(result).max()))

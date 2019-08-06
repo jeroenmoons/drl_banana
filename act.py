@@ -5,34 +5,41 @@ def train(env, agent):
     """
     Performs the main training loop.
     """
-    scores = []
 
     # TODO
-    #  - Stop after MAX_ITERATIONS or when solved (reached avg score of SOLVED_SCORE)
     #  - Decay epsilon (should be an agent internal)
     #  - Run 'regular' episode every X iterations (train_mode=False) so we can see the agent.
+    #  - Action selection histogram?
 
-    done = False
-    score = 0
-    env_info = env.reset(train_mode=True)[agent.brain_name]  # reset the environment
+    scores = []
+    iterations = 0
+    solved = False  # TODO
 
-    # For now, single step for easier debugging.
-    # while not max_iterations or solved:  # TODO
-    # while not done and episode_steps < max:  # TODO
+    while iterations < config.MAX_ITERATIONS and not solved:
+        iterations += 1
+        print('iteration {}'.format(iterations))
 
-    for i in range(2):
-        print('-'*25)
-        state = env_info.vector_observations[0]
-        action = agent.select_action(state)  # choose an action
-        print('chose action {}'.format(action))
+        done = False
+        score = 0
+        env_info = env.reset(train_mode=True)[agent.brain_name]  # reset the environment
 
-        env_info = env.step(action)[agent.brain_name]  # execute that action
-        reward, done = agent.step(state, action, env_info)  # give the agent the chance to do something with the results
+        episode_steps = 0
+        while not done and episode_steps < config.MAX_EPISODE_STEPS:
+            episode_steps += 1
 
-        score += reward  # update score with the reward
+            state = env_info.vector_observations[0]
+            action = agent.select_action(state)  # choose an action
+            print('chose action {}'.format(action))
 
-    # Keep track of scores for plotting a running average and whether or not the env is solved
-    scores.append(score)
+            env_info = env.step(action)[agent.brain_name]  # execute that action
+            reward, done = agent.step(state, action, env_info)  # give the agent the chance to do something with the results
+
+            score += reward  # update score with the reward
+
+        print('scored {}'.format(score))
+
+        # Keep track of scores for plotting a running average and whether or not the env is solved
+        scores.append(score)
 
     # TODO: periodic feedback
     # TODO: plot score average evolution
