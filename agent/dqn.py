@@ -30,7 +30,11 @@ class DqnAgent(UnityAgent):
         self.target_network = Network(self.state_size, self.hidden_layer_sizes, self.action_size)
 
     def select_action(self, state):
-        return np.random.choice(self.action_size)  # TODO: implement DQN epsilon-greedy action selection
+        # TODO: implement DQN epsilon-greedy action selection
+        #  - pick random nr, if smaller than epsilon, return random action
+        #  - else, feed state to the online network and select the action with the highest value
+
+        return np.random.choice(self.action_size)
 
     def step(self, env_info):
         # TODO: agent-specific step handling
