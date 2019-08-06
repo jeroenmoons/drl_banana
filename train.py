@@ -22,7 +22,7 @@ if __name__ == '__main__':
     env_info = banana_env.reset(train_mode=True)[brain_name]
     state_size = len(env_info.vector_observations[0])
 
-    # Create a new agent - TODO: command line agent type selection
+    # Create a new agent - TODO: command line agent type selection, load checkpoint
     agent = DqnAgent(brain_name, state_size, action_size)
 
     # Train the agent
