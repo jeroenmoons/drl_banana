@@ -78,10 +78,6 @@ class DqnAgent(UnityAgent):
 
         best_action = torch.argmax(action_values.squeeze()).numpy().item(0)  # pick action with highest Q value
 
-        print('action_values', action_values)
-        print('action_values numpy', action_values.squeeze().detach().numpy())
-        print('best action: ', best_action)
-
         return best_action
 
     def step(self, state, action, result):
@@ -90,12 +86,13 @@ class DqnAgent(UnityAgent):
         done = result.local_done[0]
 
         self.memory.add(state, action, reward, next_state, done)
-        print('experiences in memory: ', len(self.memory))
 
         experiences = self.memory.sample(self.learn_batch_size)
 
         # TODO: possibly better to learn every X steps instead of every step
         self.learn(experiences, self.gamma)
+
+        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
         return reward, done
 

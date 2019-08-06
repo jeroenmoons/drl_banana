@@ -1,5 +1,8 @@
 import config
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 def train(env, agent):
     """
@@ -13,6 +16,7 @@ def train(env, agent):
     #  - Action selection histogram?
 
     scores = []
+    scores_avg = []
     iterations = 0
     solved = False  # TODO
 
@@ -30,21 +34,35 @@ def train(env, agent):
 
             state = env_info.vector_observations[0]
             action = agent.select_action(state)  # choose an action
-            print('chose action {}'.format(action))
-
             env_info = env.step(action)[agent.brain_name]  # execute that action
-            reward, done = agent.step(state, action, env_info)  # give the agent the chance to do something with the results
+            reward, done = agent.step(state, action, env_info)  # give the agent the chance to learn from the results
 
             score += reward  # update score with the reward
 
         print('scored {}'.format(score))
 
+        if iterations % 100 == 0:
+            print('scored {} on average in the last 100 episodes'.format(np.mean(scores[-10:])))
+
         # Keep track of scores for plotting a running average and whether or not the env is solved
         scores.append(score)
+        scores_avg.append(np.mean(scores[-100:]))
 
     # TODO: periodic feedback
     # TODO: plot score average evolution
     # TODO: keep track of maximum score, plot
+
+    # plot all scores
+    plt.plot(np.arange(len(scores)), scores)
+    plt.ylabel('Score')
+    plt.xlabel('Episode #')
+    plt.show()
+
+    # plot all scores
+    plt.plot(np.arange(len(scores_avg)), scores_avg)
+    plt.ylabel('AVG Score')
+    plt.xlabel('Episode #')
+    plt.show()
 
     return scores
 

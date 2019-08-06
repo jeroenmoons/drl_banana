@@ -18,11 +18,13 @@ def get_agent():
     # Create a new agent
     agent_params = {
         'device': config.PYTORCH_DEVICE,
-        'alpha': 0.1,
-        'epsilon': .5,
+        'alpha': 5e-4,
+        'gamma': 0.99,
+        'learn_batch_size': 64,
+        'epsilon': 1.,
         'epsilon_decay': 0.9999,
-        'epsilon_min': 0.005,
-        'hidden_layer_sizes': (50, 100, 50)
+        'epsilon_min': 0.01,
+        'hidden_layer_sizes': (64, 64)
     }
 
     return DqnAgent(brain_name, state_size, action_size, agent_params)
