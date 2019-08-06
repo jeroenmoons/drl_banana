@@ -21,7 +21,7 @@ class Trainer(object):
 
     def __init__(self, sess, env, brain_name, trainer_parameters, training):
         """
-        Responsible for collecting experiences and training a neural network model.
+        Responsible for collecting experiences and training a estimate network model.
         :param sess: Tensorflow session.
         :param env: The UnityEnvironment.
         :param  trainer_parameters: The parameters for the trainer (dictionary).

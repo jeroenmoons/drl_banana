@@ -1,12 +1,10 @@
 import numpy as np
 from agent.base import UnityAgent
-from torch import nn
+from agent.estimate.neural import FullyConnectedNetwork
 
 
 class DqnAgent(UnityAgent):
-    """
-    Chooses actions using a NN to estimate action values.
-    """
+    """Chooses epsilon-greedy actions using a NN to estimate action values."""
 
     # Default params
     EPSILON_DEFAULT = 1.  # starting value for epsilon
@@ -26,8 +24,8 @@ class DqnAgent(UnityAgent):
         # online and target Q-network models
         self.hidden_layer_sizes = params.get('hidden_layer_sizes', self.HIDDEN_LAYER_SIZES_DEFAULT)
 
-        self.online_network = Network(self.state_size, self.hidden_layer_sizes, self.action_size)
-        self.target_network = Network(self.state_size, self.hidden_layer_sizes, self.action_size)
+        self.online_network = FullyConnectedNetwork(self.state_size, self.hidden_layer_sizes, self.action_size)
+        self.target_network = FullyConnectedNetwork(self.state_size, self.hidden_layer_sizes, self.action_size)
 
     def select_action(self, state):
         # TODO: implement DQN epsilon-greedy action selection
@@ -51,27 +49,3 @@ class DqnAgent(UnityAgent):
             'online_network': self.online_network,
             'target_network': self.target_network
         }
-
-
-class Network(nn.Module):
-    """Builds a neural network to estimate action (Q) values for a state"""
-
-    def __init__(self, input_size, hidden_sizes, output_size):
-        super(Network, self).__init__()
-
-        layers = []
-
-        # add input and hidden layers
-        size_in = input_size
-        for size_out in hidden_sizes:
-            layers.append(nn.Linear(size_in, size_out))
-            layers.append(nn.ReLU())
-
-            size_in = size_out  # layer output size is size_in for the next layer
-
-        layers.append(nn.Linear(size_in, output_size))  # add the output layer
-
-        self.model = nn.Sequential(*layers)  # create a model from the layers
-
-    def forward(self, x):
-        return self.model.forward(x)  # delegate to the underlying sequential model
