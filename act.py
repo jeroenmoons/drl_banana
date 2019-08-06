@@ -18,7 +18,7 @@ def train(env, agent):
 
     # For now, single step for easier debugging.
     # while not max_iterations or solved:  # TODO
-    # while not done:  # TODO
+    # while not done and episode_steps < max:  # TODO
     state = env_info.vector_observations[0]
     action = agent.select_action(state)  # choose an action
     print('chose action {}'.format(action))
