@@ -8,6 +8,7 @@ def train(env, agent):
 
     # TODO
     #  - Decay epsilon (should be an agent internal)
+    #  - Plot epsilon
     #  - Run 'regular' episode every X iterations (train_mode=False) so we can see the agent.
     #  - Action selection histogram?
 
