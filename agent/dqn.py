@@ -4,6 +4,10 @@ from torch import nn
 
 
 class DqnAgent(UnityAgent):
+    """
+    Chooses actions using a NN to estimate action values.
+    """
+
     # Default params
     EPSILON_DEFAULT = 1.  # starting value for epsilon
     EPSILON_DECAY_DEFAULT = .9999  # used to decay epsilon over time
@@ -11,9 +15,6 @@ class DqnAgent(UnityAgent):
 
     HIDDEN_LAYER_SIZES_DEFAULT = (50, 50)  # default q network hidden layer sizes
 
-    """
-    Chooses actions using a NN to estimate action values.
-    """
     def __init__(self, brain_name, state_size, action_size, params):
         super().__init__(brain_name, state_size, action_size, params)
 
@@ -50,6 +51,7 @@ class DqnAgent(UnityAgent):
 
 class Network(nn.Module):
     """Builds a neural network to estimate action (Q) values for a state"""
+
     def __init__(self, input_size, hidden_sizes, output_size):
         super(Network, self).__init__()
 
