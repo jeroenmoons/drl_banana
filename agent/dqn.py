@@ -94,6 +94,7 @@ class DqnAgent(UnityAgent):
 
         experiences = self.memory.sample(self.learn_batch_size)
 
+        # TODO: possibly better to learn every X steps instead of every step
         self.learn(experiences, self.gamma)
 
         return reward, done
