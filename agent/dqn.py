@@ -68,12 +68,20 @@ class DqnAgent(UnityAgent):
 
         return best_action
 
-    def step(self, env_info):
-        # TODO: agent-specific step handling
-        # Add experience to buffer
-        # Learn by sampling from buffer and training live network
+    def step(self, state, action, result):
+        next_state = result.vector_observations[0]
+        reward = result.rewards[0]
+        done = result.local_done[0]
 
-        pass
+        self.memory.add(state, action, reward, next_state, done)
+
+        # TODO:
+        #  - Learn by sampling from buffer and training live network every X steps
+        #  - Copy online network to target network every Y steps
+
+        print('experiences in memory: ', len(self.memory))
+
+        return reward, done
 
     def get_params(self):
         return {

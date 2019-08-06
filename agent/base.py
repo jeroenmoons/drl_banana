@@ -10,7 +10,7 @@ class UnityAgent:
     def select_action(self, state):
         pass  # Should be implemented by child classes
 
-    def step(self, env_info):
+    def step(self, state, action, result):
         pass  # Should be implemented by child classes
 
     def get_params(self):

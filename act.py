@@ -23,10 +23,7 @@ def train(env, agent):
     print('chose action {}'.format(action))
 
     env_info = env.step(action)[agent.brain_name]  # execute that action
-    agent.step(env_info)  # give the agent the chance to do something with the results (like learning!)
-
-    done = env_info.local_done[0]  # check if episode has finished
-    reward = env_info.rewards[0]
+    reward, done = agent.step(state, action, env_info)  # give the agent the chance to do something with the results
 
     score += reward  # update score with the reward
 
