@@ -19,14 +19,17 @@ def train(env, agent):
     # For now, single step for easier debugging.
     # while not max_iterations or solved:  # TODO
     # while not done and episode_steps < max:  # TODO
-    state = env_info.vector_observations[0]
-    action = agent.select_action(state)  # choose an action
-    print('chose action {}'.format(action))
 
-    env_info = env.step(action)[agent.brain_name]  # execute that action
-    reward, done = agent.step(state, action, env_info)  # give the agent the chance to do something with the results
+    for i in range(2):
+        print('-'*25)
+        state = env_info.vector_observations[0]
+        action = agent.select_action(state)  # choose an action
+        print('chose action {}'.format(action))
 
-    score += reward  # update score with the reward
+        env_info = env.step(action)[agent.brain_name]  # execute that action
+        reward, done = agent.step(state, action, env_info)  # give the agent the chance to do something with the results
+
+        score += reward  # update score with the reward
 
     # Keep track of scores for plotting a running average and whether or not the env is solved
     scores.append(score)

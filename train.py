@@ -17,6 +17,7 @@ def get_agent():
     # Create a new agent
     agent_params = {
         'device': config.PYTORCH_DEVICE,
+        'alpha': 0.1,
         'epsilon': .5,
         'epsilon_decay': 0.9999,
         'epsilon_min': 0.005,

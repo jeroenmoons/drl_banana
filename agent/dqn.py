@@ -1,6 +1,8 @@
 import numpy as np
 import random
 import torch
+import torch.nn.functional as F
+import torch.optim as optim
 
 from agent.base import UnityAgent
 from agent.estimate.neural import FullyConnectedNetwork
@@ -17,6 +19,8 @@ class DqnAgent(UnityAgent):
 
     REPLAY_BUFFER_SIZE = 100000  # max nr of experiences in memory
 
+    ALPHA_DEFAULT = .1  # default learning rate
+
     GAMMA_DEFAULT = .9  # default reward discount factor
 
     EPSILON_DEFAULT = 1.  # starting value for epsilon
@@ -32,6 +36,7 @@ class DqnAgent(UnityAgent):
         self.device = params.get('device', self.DEVICE_DEFAULT)
 
         # learning parameters
+        self.alpha = params.get('alpha', self.ALPHA_DEFAULT)
         self.gamma = params.get('gamma', self.GAMMA_DEFAULT)
 
         self.epsilon = params.get('epsilon', self.EPSILON_DEFAULT)
@@ -49,6 +54,8 @@ class DqnAgent(UnityAgent):
 
         self.online_network = FullyConnectedNetwork(self.state_size, self.hidden_layer_sizes, self.action_size)
         self.target_network = FullyConnectedNetwork(self.state_size, self.hidden_layer_sizes, self.action_size)
+
+        self.optimizer = optim.Adam(self.online_network.parameters(), lr=self.alpha)
 
     def select_action(self, state):
         """
@@ -93,17 +100,34 @@ class DqnAgent(UnityAgent):
 
     def learn(self, experiences, gamma):
         """Performs gradient descent of the local network on the batch of experiences."""
-        print(experiences)
 
-        # TODO: Learn from experience by SGD on online network
-        # - create pytorch tensors from the experiences
-        # - get q values for next states from target_network
+        # create pytorch tensors from the experiences
+        states = torch.tensor(np.array([e.state for e in experiences])).float().to(self.device)
+        actions = torch.tensor(np.array([[e.action] for e in experiences])).long().to(self.device)
+        rewards = torch.tensor(np.array([[e.reward] for e in experiences])).float().to(self.device)
+        next_states = torch.tensor(np.array([e.next_state for e in experiences])).float().to(self.device)
+        dones = torch.tensor(np.array([[1] if e.done else [0] for e in experiences]).astype(np.uint8)).float().to(self.device)
 
-        # - calculate q values for current states: gamma * reward + target_value_of_next_state
-        # - calculate expected q values for current state by evaluation through online_network
+        # get q values for next states from target_network
+        next_state_values = self.target_network(next_states)
 
-        # - calculate error between the two (= loss)
-        # - minimize the loss
+        # get the maximum q value for each of the next_states
+        best_next_action_values = next_state_values.detach().max(1)[0].unsqueeze(1)
+
+        # calculate q values for current states: gamma * reward + target_value_of_next_state
+        # multiplication by (1 - dones) sets next state value to 0 if it is end of episode.
+        targets = rewards + (gamma * best_next_action_values * (1 - dones))
+
+        # calculate expected q values for current state by evaluation through online_network
+        expecteds = self.online_network(states).gather(1, actions)
+
+        # calculate error between the two (= loss)
+        loss = F.mse_loss(expecteds, targets)
+
+        # minimize loss
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
 
         # TODO: Perform soft update of the target network parameters from online network (governed by TAU hyper param)
         pass
@@ -113,6 +137,7 @@ class DqnAgent(UnityAgent):
             'device': self.device,
             'memory_size': self.memory_size,
             'learn_batch_size': self.learn_batch_size,
+            'alpha': self.alpha,
             'gamma': self.gamma,
             'epsilon': self.epsilon,
             'epsilon_decay': self.epsilon_decay,
