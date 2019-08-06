@@ -130,8 +130,13 @@ class DqnAgent(UnityAgent):
         loss.backward()
         self.optimizer.step()
 
-        # TODO: Perform soft update of the target network parameters from online network (governed by TAU hyper param)
-        pass
+        # update the target network's weights only slightly to stabilize training
+        self.soft_update_target_network(self.online_network, self.target_network, 1e-3)
+
+    def soft_update_target_network(self, source, target, tau):
+        """Soft update target network weights from source."""
+        for target_w, source_w in zip(target.parameters(), source.parameters()):
+            target_w.data.copy_(tau * source_w.data + (1.0 - tau) * target_w.data)
 
     def get_params(self):
         return {
