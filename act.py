@@ -36,6 +36,7 @@ def train(env, agent):
 
     # TODO: periodic feedback
     # TODO: plot score average evolution
+    # TODO: keep track of maximum score, plot
 
     return scores
 
