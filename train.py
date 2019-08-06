@@ -5,6 +5,26 @@ from act import train
 from agent.dqn import DqnAgent
 
 
+def get_agent():
+    """
+    Builds the UnityAgent object to train.
+    """
+
+    # TODO:
+    #  - command line agent type selection (agent factory)
+    #  - load checkpoint to continue learning
+
+    # Create a new agent
+    agent_params = {
+        'epsilon': .9,
+        'epsilon_decay': 0.99,
+        'epsilon_min': 0.1,
+        'hidden_layer_sizes': (50, 100, 50)
+    }
+
+    return DqnAgent(brain_name, state_size, action_size, agent_params)
+
+
 if __name__ == '__main__':
     """
     This runs a randomly acting agent, completely ignoring the state and picking a random action at each time step.
@@ -23,12 +43,13 @@ if __name__ == '__main__':
     env_info = banana_env.reset(train_mode=True)[brain_name]
     state_size = len(env_info.vector_observations[0])
 
-    # Create a new agent - TODO: command line agent type selection, load checkpoint
-    agent = DqnAgent(brain_name, state_size, action_size, {})
+    agent = get_agent()
+    print('Agent params: {}'.format(agent.get_params()))
 
     # Train the agent
     result = train(banana_env, agent)
 
-    banana_env.close()  # Close the environment, no longer needed
+    # Close the environment, no longer needed
+    banana_env.close()
 
-    print("Score: {}".format(result))
+    print("Last 100 scores: {}".format(result[-100:]))

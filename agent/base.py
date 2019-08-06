@@ -13,3 +13,6 @@ class UnityAgent:
 
     def step(self, env_info):
         pass  # Should be implemented by child classes
+
+    def get_params(self):
+        return self.params
