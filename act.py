@@ -21,12 +21,10 @@ def train(env, agent):
     state = env_info.vector_observations[0]
     action = agent.select_action(state)  # choose an action
     env_info = env.step(action)[agent.brain_name]  # execute that action
-    agent.step(env_info)
+    agent.step(env_info)  # give the agent the chance to do something with the results (like learning!)
 
     done = env_info.local_done[0]  # check if episode has finished
     reward = env_info.rewards[0]
-
-    # TODO: add experience to experience buffer (Agent internal)
 
     score += reward  # update score with the reward
 
