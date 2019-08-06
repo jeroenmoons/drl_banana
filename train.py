@@ -16,7 +16,7 @@ def get_agent():
 
     # Create a new agent
     agent_params = {
-        'epsilon': 1.,
+        'epsilon': .5,
         'epsilon_decay': 0.9999,
         'epsilon_min': 0.005,
         'hidden_layer_sizes': (50, 100, 50)

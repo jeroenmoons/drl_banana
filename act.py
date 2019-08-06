@@ -20,6 +20,8 @@ def train(env, agent):
     # while not done:
     state = env_info.vector_observations[0]
     action = agent.select_action(state)  # choose an action
+    print('chose action {}'.format(action))
+
     env_info = env.step(action)[agent.brain_name]  # execute that action
     agent.step(env_info)  # give the agent the chance to do something with the results (like learning!)
 
