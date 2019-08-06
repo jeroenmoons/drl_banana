@@ -17,7 +17,8 @@ def train(env, agent):
     env_info = env.reset(train_mode=True)[agent.brain_name]  # reset the environment
 
     # For now, single step for easier debugging.
-    # while not done:
+    # while not max_iterations or solved:  # TODO
+    # while not done:  # TODO
     state = env_info.vector_observations[0]
     action = agent.select_action(state)  # choose an action
     print('chose action {}'.format(action))
