@@ -20,7 +20,7 @@ def get_agent():
         'device': config.PYTORCH_DEVICE,
         'alpha': 5e-4,
         'gamma': 0.99,
-        'learn_batch_size': 64,
+        'learn_batch_size': 100,
         'epsilon': 1.,
         'epsilon_decay': 0.9999,
         'epsilon_min': 0.01,
