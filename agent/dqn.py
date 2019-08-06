@@ -34,6 +34,10 @@ class DqnAgent(UnityAgent):
         self.target_network = FullyConnectedNetwork(self.state_size, self.hidden_layer_sizes, self.action_size)
 
     def select_action(self, state):
+        """
+        Selects an epsilon-greedy action from the action space, using the online_network to estimate action values.
+        """
+
         # with probability epsilon, explore by choosing a random action
         if np.random.rand() < self.epsilon:
             return np.random.choice(self.action_size)
@@ -41,7 +45,7 @@ class DqnAgent(UnityAgent):
         # else, use the online network to choose the action it currently estimates to be the best one
         state_tensor = torch.from_numpy(state).float()
         state_tensor = state_tensor.unsqueeze(0)  # wrap state in extra array so vector becomes a (single state) batch
-        state_tensor = state_tensor.to(self.device)
+        state_tensor = state_tensor.to(self.device)  # move the tensor to the configured device (cpu or cuda/gpu)
 
         action_values = self.online_network(state_tensor)
         best_action = torch.argmax(action_values.squeeze()).numpy().item(0)  # pick action with highest value
