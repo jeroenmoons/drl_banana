@@ -6,5 +6,5 @@ class RandomAgent(UnityAgent):
     """
     Randomly acting agent. Total disregard for environment state.
     """
-    def select_action(self, state, epsilon=0.):
+    def select_action(self, state):
         return np.random.choice(self.action_size)

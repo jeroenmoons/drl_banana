@@ -7,7 +7,7 @@ class UnityAgent:
         self.state_size = state_size
         self.action_size = action_size
 
-    def select_action(self, state, epsilon=0.):
+    def select_action(self, state):
         pass  # Should be implemented by child classes
 
     def step(self, env_info):
