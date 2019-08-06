@@ -1,4 +1,5 @@
 import numpy as np
+import random
 import torch
 
 from agent.base import UnityAgent
@@ -16,6 +17,8 @@ class DqnAgent(UnityAgent):
 
     REPLAY_BUFFER_SIZE = 100000  # max nr of experiences in memory
 
+    GAMMA_DEFAULT = .9  # default reward discount factor
+
     EPSILON_DEFAULT = 1.  # starting value for epsilon
     EPSILON_DECAY_DEFAULT = .9999  # used to decay epsilon over time
     EPSILON_MIN_DEFAULT = .005  # minimum value for decayed epsilon
@@ -29,6 +32,8 @@ class DqnAgent(UnityAgent):
         self.device = params.get('device', self.DEVICE_DEFAULT)
 
         # learning parameters
+        self.gamma = params.get('gamma', self.GAMMA_DEFAULT)
+
         self.epsilon = params.get('epsilon', self.EPSILON_DEFAULT)
         self.epsilon_decay = params.get('epsilon_decay', self.EPSILON_DECAY_DEFAULT)
         self.epsilon_min = params.get('epsilon_min', self.EPSILON_MIN_DEFAULT)
@@ -59,8 +64,12 @@ class DqnAgent(UnityAgent):
         state_tensor = state_tensor.unsqueeze(0)  # wrap state in extra array so vector becomes a (single state) batch
         state_tensor = state_tensor.to(self.device)  # move the tensor to the configured device (cpu or cuda/gpu)
 
-        action_values = self.online_network(state_tensor)
-        best_action = torch.argmax(action_values.squeeze()).numpy().item(0)  # pick action with highest value
+        self.online_network.eval()  # switch to evaluation mode for more efficient evaluation of the state tensor
+        with torch.no_grad():
+            action_values = self.online_network(state_tensor)
+        self.online_network.train()  # and back to training mode
+
+        best_action = torch.argmax(action_values.squeeze()).numpy().item(0)  # pick action with highest Q value
 
         print('action_values', action_values)
         print('action_values numpy', action_values.squeeze().detach().numpy())
@@ -74,14 +83,30 @@ class DqnAgent(UnityAgent):
         done = result.local_done[0]
 
         self.memory.add(state, action, reward, next_state, done)
-
-        # TODO:
-        #  - Learn by sampling from buffer and training live network every X steps
-        #  - Copy online network to target network every Y steps
-
         print('experiences in memory: ', len(self.memory))
 
+        experiences = self.memory.sample(self.learn_batch_size)
+
+        self.learn(experiences, self.gamma)
+
         return reward, done
+
+    def learn(self, experiences, gamma):
+        """Performs gradient descent of the local network on the batch of experiences."""
+        print(experiences)
+
+        # TODO: Learn from experience by SGD on online network
+        # - create pytorch tensors from the experiences
+        # - get q values for next states from target_network
+
+        # - calculate q values for current states: gamma * reward + target_value_of_next_state
+        # - calculate expected q values for current state by evaluation through online_network
+
+        # - calculate error between the two (= loss)
+        # - minimize the loss
+
+        # TODO: Perform soft update of the target network parameters from online network (governed by TAU hyper param)
+        pass
 
     def get_params(self):
         return {
@@ -108,6 +133,13 @@ class ReplayBuffer:
         """Add a new experience to memory."""
         e = self.experience(state, action, reward, next_state, done)
         self.buffer.append(e)
+
+    def sample(self, sample_size):
+        """Select a random batch of experiences from the buffer."""
+        memory_size = len(self.buffer)
+        sample_size = sample_size if sample_size < memory_size else memory_size
+
+        return random.sample(self.buffer, k=sample_size)
 
     def __len__(self):
         """Return the current size of internal memory."""
