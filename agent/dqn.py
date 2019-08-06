@@ -19,8 +19,8 @@ class DqnAgent(UnityAgent):
 
         # learning parameters
         self.epsilon = params.get('epsilon', self.EPSILON_DEFAULT)
-        self.epsilon_decay = params.get('epsilon', self.EPSILON_DECAY_DEFAULT)
-        self.epsilon_min = params.get('epsilon', self.EPSILON_MIN_DEFAULT)
+        self.epsilon_decay = params.get('epsilon_decay', self.EPSILON_DECAY_DEFAULT)
+        self.epsilon_min = params.get('epsilon_min', self.EPSILON_MIN_DEFAULT)
 
         # online and target Q-network models
         self.hidden_layer_sizes = params.get('hidden_layer_sizes', self.HIDDEN_LAYER_SIZES_DEFAULT)
