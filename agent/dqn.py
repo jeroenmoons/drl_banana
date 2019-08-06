@@ -61,6 +61,7 @@ class DqnAgent(UnityAgent):
 
     def get_params(self):
         return {
+            'device': self.device,
             'epsilon': self.epsilon,
             'epsilon_decay': self.epsilon_decay,
             'epsilon_min': self.epsilon_min,
