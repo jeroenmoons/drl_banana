@@ -113,6 +113,7 @@ class DqnAgent(UnityAgent):
             'device': self.device,
             'memory_size': self.memory_size,
             'learn_batch_size': self.learn_batch_size,
+            'gamma': self.gamma,
             'epsilon': self.epsilon,
             'epsilon_decay': self.epsilon_decay,
             'epsilon_min': self.epsilon_min,
