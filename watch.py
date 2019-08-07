@@ -1,9 +1,7 @@
-import argparse
-
 import config
 
+import argparse
 from unityagents import UnityEnvironment
-
 from agent.factory import AgentFactory
 
 
