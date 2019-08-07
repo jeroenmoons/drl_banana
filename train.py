@@ -11,9 +11,7 @@ def get_agent():
     Builds the UnityAgent object to train.
     """
 
-    # TODO:
-    #  - command line agent type selection (agent factory)
-    #  - load checkpoint to continue learning
+    # TODO: load checkpoint to continue learning
 
     # Create a new agent
     agent_params = {
@@ -32,7 +30,7 @@ def get_agent():
 
 if __name__ == '__main__':
     """
-    This runs a randomly acting agent, completely ignoring the state and picking a random action at each time step.
+    This shows an agent performing a single episode.
     """
     print('training a new agent to master {}'.format(config.ENV_APP))
 

@@ -9,12 +9,6 @@ def train(env, agent):
     Performs the main training loop.
     """
 
-    # TODO
-    #  - Decay epsilon (should be an agent internal)
-    #  - Plot epsilon
-    #  - Run 'regular' episode every X iterations (train_mode=False) so we can see the agent.
-    #  - Action selection histogram?
-
     scores = []
     scores_avg = []
     iterations = 0
@@ -22,7 +16,6 @@ def train(env, agent):
 
     while iterations < config.MAX_ITERATIONS and not solved:
         iterations += 1
-        print('iteration {}'.format(iterations))
 
         done = False
         score = 0
@@ -39,18 +32,13 @@ def train(env, agent):
 
             score += reward  # update score with the reward
 
-        print('scored {}'.format(score))
-
         if iterations % 100 == 0:
-            print('scored {} on average in the last 100 episodes'.format(np.mean(scores[-10:])))
+            mean = np.mean(scores[-100:])
+            print('Iteration {} - scored {} on average in the last 100 episodes'.format(iterations, mean))
 
         # Keep track of scores for plotting a running average and whether or not the env is solved
         scores.append(score)
         scores_avg.append(np.mean(scores[-100:]))
-
-    # TODO: periodic feedback
-    # TODO: plot score average evolution
-    # TODO: keep track of maximum score, plot
 
     # plot all scores
     plt.plot(np.arange(len(scores)), scores)
@@ -58,9 +46,9 @@ def train(env, agent):
     plt.xlabel('Episode #')
     plt.show()
 
-    # plot all scores
+    # plot average scores
     plt.plot(np.arange(len(scores_avg)), scores_avg)
-    plt.ylabel('AVG Score')
+    plt.ylabel('Avg Score over last 100 eps')
     plt.xlabel('Episode #')
     plt.show()
 
@@ -77,10 +65,10 @@ def run_episode(env, agent):
     env_info = env.reset(train_mode=False)[agent.brain_name]  # reset the environment
 
     while not done:
-        state = env_info.vector_observations[0]
+        state = env_info.vector_observations[0]  # observe the current env state
         action = agent.select_action(state)  # choose an action
         env_info = env.step(action)[agent.brain_name]  # execute that action
+        score += env_info.rewards[0]  # update episode score with the reward obtained from the action
         done = env_info.local_done[0]  # check if episode has finished
-        score += env_info.rewards[0]  # update score with the reward
 
     return score

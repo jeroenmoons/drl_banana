@@ -1,12 +1,11 @@
 import numpy as np
-import random
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
 from agent.base import UnityAgent
 from agent.estimate.neural import FullyConnectedNetwork
-from collections import namedtuple, deque
+from agent.memory.buffer import ReplayBuffer
 
 
 class DqnAgent(UnityAgent):
@@ -17,7 +16,7 @@ class DqnAgent(UnityAgent):
 
     HIDDEN_LAYER_SIZES_DEFAULT = (50, 50)  # default q network hidden layer sizes
 
-    REPLAY_BUFFER_SIZE = 100000  # max nr of experiences in memory
+    REPLAY_BUFFER_SIZE_DEFAULT = 100000  # max nr of experiences in memory
 
     ALPHA_DEFAULT = .1  # default learning rate
 
@@ -27,7 +26,7 @@ class DqnAgent(UnityAgent):
     EPSILON_DECAY_DEFAULT = .9999  # used to decay epsilon over time
     EPSILON_MIN_DEFAULT = .005  # minimum value for decayed epsilon
 
-    LEARN_BATCH_SIZE = 50  # batch size to use when learning from memory
+    LEARN_BATCH_SIZE_DEFAULT = 50  # batch size to use when learning from memory
 
     def __init__(self, brain_name, state_size, action_size, params):
         super().__init__(brain_name, state_size, action_size, params)
@@ -43,10 +42,10 @@ class DqnAgent(UnityAgent):
         self.epsilon_decay = params.get('epsilon_decay', self.EPSILON_DECAY_DEFAULT)
         self.epsilon_min = params.get('epsilon_min', self.EPSILON_MIN_DEFAULT)
 
-        self.learn_batch_size = params.get('learn_batch_size', self.LEARN_BATCH_SIZE)
+        self.learn_batch_size = params.get('learn_batch_size', self.LEARN_BATCH_SIZE_DEFAULT)
 
         # memory
-        self.memory_size = params.get('memory_size', self.REPLAY_BUFFER_SIZE)
+        self.memory_size = params.get('memory_size', self.REPLAY_BUFFER_SIZE_DEFAULT)
         self.memory = ReplayBuffer(action_size, self.memory_size)
 
         # online and target Q-network models
@@ -59,7 +58,8 @@ class DqnAgent(UnityAgent):
 
     def select_action(self, state):
         """
-        Selects an epsilon-greedy action from the action space, using the online_network to estimate action values.
+        Selects an epsilon-greedy action from the action space, using the
+        online_network and target_network to estimate action values.
         """
 
         # with probability epsilon, explore by choosing a random action
@@ -89,50 +89,56 @@ class DqnAgent(UnityAgent):
 
         experiences = self.memory.sample(self.learn_batch_size)
 
-        # TODO: possibly better to learn every X steps instead of every step
-        self.learn(experiences, self.gamma)
+        self.learn(experiences, self.gamma)  # learn every step
 
-        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)  # decay epsilon up to minimum
 
         return reward, done
 
     def learn(self, experiences, gamma):
         """Performs gradient descent of the local network on the batch of experiences."""
 
-        # create pytorch tensors from the experiences
-        states = torch.tensor(np.array([e.state for e in experiences])).float().to(self.device)
-        actions = torch.tensor(np.array([[e.action] for e in experiences])).long().to(self.device)
-        rewards = torch.tensor(np.array([[e.reward] for e in experiences])).float().to(self.device)
-        next_states = torch.tensor(np.array([e.next_state for e in experiences])).float().to(self.device)
-        dones = torch.tensor(np.array([[1] if e.done else [0] for e in experiences]).astype(np.uint8)).float().to(self.device)
+        # create pytorch tensors from the sampled experiences
+        states, actions, rewards, next_states, dones = self.tensorize_experiences(experiences)
 
-        # get q values for next states from target_network
-        next_state_values = self.target_network(next_states)
+        # get estimated q values for next states from target_network
+        next_state_values = self.target_network(next_states)  # get q for each action in next_states
+        next_targets = next_state_values.detach().max(1)[0].unsqueeze(1)  # select maximum action value for each one
 
-        # get the maximum q value for each of the next_states
-        best_next_action_values = next_state_values.detach().max(1)[0].unsqueeze(1)
-
-        # calculate q values for current states: gamma * reward + target_value_of_next_state
-        # multiplication by (1 - dones) sets next state value to 0 if it is end of episode.
-        targets = rewards + (gamma * best_next_action_values * (1 - dones))
+        # calculate q values for current states: reward + (gamma * target value of next_state)
+        # multiplication by (1 - dones) sets next_state value to 0 if state was end of episode.
+        targets = rewards + (gamma * next_targets * (1 - dones))
 
         # calculate expected q values for current state by evaluation through online_network
         expecteds = self.online_network(states).gather(1, actions)
 
-        # calculate error between the two (= loss)
+        # calculate error between expected and target (= loss)
         loss = F.mse_loss(expecteds, targets)
 
-        # minimize loss
+        # minimize that loss to make the network perform better next time
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
 
         # update the target network's weights only slightly to stabilize training
+        # (instead of copying all weights every X episodes)
         self.soft_update_target_network(self.online_network, self.target_network, 1e-3)
+
+    def tensorize_experiences(self, experiences):
+        """Turns a set of experiences into separate tensors."""
+
+        states = torch.tensor(np.array([e.state for e in experiences])).float().to(self.device)
+        actions = torch.tensor(np.array([[e.action] for e in experiences])).long().to(self.device)
+        rewards = torch.tensor(np.array([[e.reward] for e in experiences])).float().to(self.device)
+        next_states = torch.tensor(np.array([e.next_state for e in experiences])).float().to(self.device)
+        dones = torch.tensor(np.array([[int(e.done)] for e in experiences]).astype(np.uint8)).float().to(self.device)
+
+        return states, actions, rewards, next_states, dones
 
     def soft_update_target_network(self, source, target, tau):
         """Soft update target network weights from source."""
         for target_w, source_w in zip(target.parameters(), source.parameters()):
+            # move target weights slightly closer to source weights.
             target_w.data.copy_(tau * source_w.data + (1.0 - tau) * target_w.data)
 
     def get_params(self):
@@ -148,28 +154,3 @@ class DqnAgent(UnityAgent):
             'online_network': self.online_network,
             'target_network': self.target_network
         }
-
-
-class ReplayBuffer:
-    """Fixed-size buffer to store experience tuples."""
-
-    def __init__(self, action_size, buffer_size):
-        self.action_size = action_size
-        self.buffer = deque(maxlen=buffer_size)
-        self.experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
-
-    def add(self, state, action, reward, next_state, done):
-        """Add a new experience to memory."""
-        e = self.experience(state, action, reward, next_state, done)
-        self.buffer.append(e)
-
-    def sample(self, sample_size):
-        """Select a random batch of experiences from the buffer."""
-        memory_size = len(self.buffer)
-        sample_size = sample_size if sample_size < memory_size else memory_size
-
-        return random.sample(self.buffer, k=sample_size)
-
-    def __len__(self):
-        """Return the current size of internal memory."""
-        return len(self.buffer)

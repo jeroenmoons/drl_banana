@@ -19,7 +19,7 @@ class FullyConnectedNetwork(nn.Module):
 
         layers.append(nn.Linear(size_in, output_size))  # add the output layer
 
-        self.model = nn.Sequential(*layers)  # create a model from the layers
+        self.model = nn.Sequential(*layers)  # create a sequential model from the list of layers
 
     def forward(self, x):
         return self.model.forward(x)  # delegate to the underlying sequential model
