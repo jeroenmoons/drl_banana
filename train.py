@@ -1,12 +1,12 @@
 import config
 
 import numpy as np
+import matplotlib.pyplot as plt
 from unityagents import UnityEnvironment
-from act import train
 from agent.dqn import DqnAgent
 
 
-def get_agent():
+def get_agent(brain_name, state_size, action_size):
     """
     Builds the UnityAgent object to train.
     """
@@ -28,6 +28,63 @@ def get_agent():
     return DqnAgent(brain_name, state_size, action_size, agent_params)
 
 
+def train(env, agent):
+    """
+    Performs the main training loop.
+    """
+
+    scores = []
+    scores_avg = []
+    iterations = 0
+    solved = False  # TODO
+
+    while iterations < config.MAX_ITERATIONS and not solved:
+        iterations += 1
+
+        done = False
+        score = 0
+        env_info = env.reset(train_mode=True)[agent.brain_name]  # reset the environment
+
+        episode_steps = 0
+        while not done and episode_steps < config.MAX_EPISODE_STEPS:
+            episode_steps += 1
+
+            state = env_info.vector_observations[0]
+            action = agent.select_action(state)  # choose an action
+            env_info = env.step(action)[agent.brain_name]  # execute that action
+            reward, done = agent.step(state, action, env_info)  # give the agent the chance to learn from the results
+
+            score += reward  # update score with the reward
+
+        if iterations % 100 == 0:
+            mean = np.mean(scores[-100:])
+            print('Iteration {} - avg score of {} over last 100 episodes'.format(iterations, mean))
+
+        # Keep track of scores for plotting a running average and whether or not the env is solved
+        scores.append(score)
+        scores_avg.append(np.mean(scores[-100:]))
+
+    plot_scores(scores, scores_avg)
+
+    return scores
+
+
+def plot_scores(scores, scores_avg):
+    """Creates plots of score track record."""
+
+    # plot all scores
+    plt.plot(np.arange(len(scores)), scores)
+    plt.ylabel('Score')
+    plt.xlabel('Episode #')
+    plt.show()
+
+    # plot average scores
+    plt.plot(np.arange(len(scores_avg)), scores_avg)
+    plt.ylabel('Avg Score over last 100 eps')
+    plt.xlabel('Episode #')
+    plt.show()
+
+
 if __name__ == '__main__':
     """
     This shows an agent performing a single episode.
@@ -43,14 +100,14 @@ if __name__ == '__main__':
     action_size = brain.vector_action_space_size
 
     # Examine state space
-    env_info = banana_env.reset(train_mode=True)[brain_name]
-    state_size = len(env_info.vector_observations[0])
+    initial_env_info = banana_env.reset(train_mode=True)[brain_name]
+    state_size = len(initial_env_info.vector_observations[0])
 
-    agent = get_agent()
-    print('Agent params: {}'.format(agent.get_params()))
+    an_agent = get_agent(brain_name, state_size, action_size)
+    print('Agent params: {}'.format(an_agent.get_params()))
 
     # Train the agent
-    result = train(banana_env, agent)
+    result = train(banana_env, an_agent)
 
     # Close the environment, no longer needed
     banana_env.close()
