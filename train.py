@@ -10,10 +10,6 @@ def get_agent(brain_name, state_size, action_size):
     """
     Builds the UnityAgent object to train.
     """
-
-    # TODO: load checkpoint to continue learning
-
-    # Create a new agent
     agent_params = {
         'device': config.PYTORCH_DEVICE,
         'alpha': 5e-4,
@@ -60,18 +56,17 @@ def train(env, agent):
         avg_score = np.mean(scores[-100:])  # calculate average score over the last 100 episodes
         scores_avg.append(avg_score)  # keep track of the average score
 
+        # print periodic progress report
         if iterations % 100 == 0:
-            # print periodic progress report
             print('Iteration {} - avg score of {} over last 100 episodes'.format(iterations, avg_score))
 
         # if the environment is solved, stop training
         if not solved and avg_score > config.SOLVED_SCORE:
-            print('Environment solved with a score of {}'.format(avg_score))
+            print('Environment solved in {} iterations with a score of {}'.format(iterations, avg_score))
             solved = True
 
-    plot_scores(scores, scores_avg)
-
     print('Training ended with an avg score of {} over last 100 episodes'.format(scores_avg[-1]))
+    plot_scores(scores, scores_avg)
 
     return scores
 
