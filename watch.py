@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     agent_type = args.agent
 
-    print('agent type spec: {}'.format(args.agent))
+    print('Running {} agent inside the Banana environment'.format(args.agent))
 
     # Create the Unity environment
     banana_env = UnityEnvironment(file_name=config.ENV_APP)
@@ -48,13 +48,16 @@ if __name__ == '__main__':
     env_info = banana_env.reset(train_mode=True)[brain_name]
     state_size = len(env_info.vector_observations[0])
 
-    # Create agent of the specified type
-    agent_factory = AgentFactory()
-    agent = agent_factory.create_agent(agent_type, brain_name, state_size, action_size)
+    try:
+        # Create agent of the specified type
+        agent_factory = AgentFactory()
+        agent = agent_factory.create_agent(agent_type, brain_name, state_size, action_size)
 
-    # Run the agent inside the Banana environment
-    result = run_episode(banana_env, agent)
+        # Run the agent inside the Banana environment
+        result = run_episode(banana_env, agent)
+
+        print("Score: {}".format(result))
+    except Exception as e:
+        print('Could not run the agent: {}'.format(e))
 
     banana_env.close()
-
-    print("Score: {}".format(result))
