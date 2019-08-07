@@ -52,6 +52,7 @@ if __name__ == '__main__':
         # Create agent of the specified type
         agent_factory = AgentFactory()
         agent = agent_factory.create_agent(agent_type, brain_name, state_size, action_size)
+        agent.training = False  # disables training mode, agent will ignore epsilon when choosing actions
 
         # Run the agent inside the Banana environment
         result = run_episode(banana_env, agent)

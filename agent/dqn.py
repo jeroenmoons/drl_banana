@@ -63,7 +63,7 @@ class DqnAgent(UnityAgent):
         """
 
         # with probability epsilon, explore by choosing a random action
-        if np.random.rand() < self.epsilon:
+        if self.training and np.random.rand() < self.epsilon:
             return np.random.choice(self.action_size)
 
         # else, use the online network to choose the action it currently estimates to be the best one
@@ -141,8 +141,8 @@ class DqnAgent(UnityAgent):
             # move target weights slightly closer to source weights.
             target_w.data.copy_(tau * source_w.data + (1.0 - tau) * target_w.data)
 
-    def save_checkpoint(self):
-        torch.save(self.online_network.state_dict(), 'saved_models/dqn_agent_checkpoint.pth')
+    def save_checkpoint(self, name='checkpoint'):
+        torch.save(self.online_network.state_dict(), 'saved_models/dqn_agent_{}.pth'.format(name))
 
     def load_checkpoint(self, checkpoint):
         weights = torch.load(checkpoint)

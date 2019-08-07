@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from unityagents import UnityEnvironment
 from agent.dqn import DqnAgent
+from agent.factory import AgentFactory
 
 
 def get_agent(brain_name, state_size, action_size):
@@ -35,6 +36,7 @@ def train(env, agent):
     solved = False  # TODO
 
     while iterations < config.MAX_ITERATIONS and not solved:
+        print('.', '')
         iterations += 1
 
         done = False
@@ -59,12 +61,13 @@ def train(env, agent):
         # print periodic progress report
         if iterations % 100 == 0:
             print('Iteration {} - avg score of {} over last 100 episodes'.format(iterations, avg_score))
+            agent.save_checkpoint(name='checkpoint')
 
         # if the environment is solved, stop training
         if not solved and avg_score > config.SOLVED_SCORE:
             print('Environment solved in {} iterations with a score of {}'.format(iterations, avg_score))
             solved = True
-            agent.save_checkpoint()
+            agent.save_checkpoint(name='solved')
 
     print('Training ended with an avg score of {} over last 100 episodes'.format(scores_avg[-1]))
     plot_scores(scores, scores_avg)
@@ -106,7 +109,10 @@ if __name__ == '__main__':
     initial_env_info = banana_env.reset(train_mode=True)[brain_name]
     state_size = len(initial_env_info.vector_observations[0])
 
-    an_agent = get_agent(brain_name, state_size, action_size)
+    # Create a new DQN agent
+    agent_factory = AgentFactory()
+    an_agent = agent_factory.create_agent('dqn_new', brain_name, state_size, action_size)
+    an_agent.training = True  # True is default, but just in case
     print('Agent params: {}'.format(an_agent.get_params()))
 
     # Train the agent

@@ -6,6 +6,7 @@ class UnityAgent:
         self.state_size = state_size
         self.action_size = action_size
         self.params = params
+        self.training = True
 
     def select_action(self, state):
         pass  # Should be implemented by child classes
