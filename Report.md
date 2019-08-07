@@ -51,13 +51,18 @@ episodes and by playing with the parameters and network a bit more.
 
 ## Ideas for future work
 
-A more structured and thorough search of the algorithm's parameters would most likely result in a more efficient 
-solution. A parallellized grid search of the hyperparameter space would be interesting.
+1. A more structured and thorough search of the algorithm's parameters would most likely result in a more efficient 
+solution. A **parallellized grid search** of the hyperparameter space would be interesting. 
 
-This algorithm is a vanilla DQN implementation. This more than suffices to solve the problem at hand but implementing a 
-few tweaks would probably result in quicker convergence:
-* prioritized buffer replay to prefer learning from bad estimates
-* double DQN might learn faster
-* noisy networks could be an interesting alternative for the epsilon parameter
+2. An intriguing parameter is the **learning batch size**: a larger batch size seems to result in faster learning, but 
+is this always the case? What is the limit? When does the necessary computation become too much for the added gain of 
+learning faster?
 
-Solving the environment from pixels, as suggested by the Udacity project description would be an interesting exercise.
+3. This algorithm is a vanilla DQN implementation. This more than suffices to solve the problem at hand but implementing 
+a few tweaks (or the full rainbow DQN) would almost certainly result in quicker convergence:
+    * prioritized buffer replay to prefer learning from bad estimates
+    * double DQN might learn more efficiently
+    * noisy networks could be an interesting alternative for the epsilon parameter
+
+4. Solving the problem from pixels instead of the ray traced state vectors, as suggested by the Udacity project 
+description would be an interesting exercise.
