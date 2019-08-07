@@ -1,5 +1,7 @@
 import config
 
+import time
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from unityagents import UnityEnvironment
@@ -30,13 +32,19 @@ def train(env, agent):
     Performs the main training loop.
     """
 
+    max_score = 0
     scores = []
     scores_avg = []
     iterations = 0
     solved = False  # TODO
 
+    print('Training agent.')
+
     while iterations < config.MAX_ITERATIONS and not solved:
-        print('.', '')
+        # show a progress indication
+        print('\repisode {}, max score so far is {}'.format(iterations, max_score), end='')
+        sys.stdout.flush()
+
         iterations += 1
 
         done = False
@@ -57,15 +65,16 @@ def train(env, agent):
         scores.append(score)  # keep track of the episode score
         avg_score = np.mean(scores[-100:])  # calculate average score over the last 100 episodes
         scores_avg.append(avg_score)  # keep track of the average score
+        max_score = score if max_score < score else max_score  # keep track of max score so far
 
         # print periodic progress report
         if iterations % 100 == 0:
-            print('Iteration {} - avg score of {} over last 100 episodes'.format(iterations, avg_score))
+            print('\rIteration {} - avg score of {} over last 100 episodes'.format(iterations, avg_score))
             agent.save_checkpoint(name='checkpoint')
 
         # if the environment is solved, stop training
         if not solved and avg_score > config.SOLVED_SCORE:
-            print('Environment solved in {} iterations with a score of {}'.format(iterations, avg_score))
+            print('\rEnvironment solved in {} iterations with a score of {}'.format(iterations, avg_score))
             solved = True
             agent.save_checkpoint(name='solved')
 
