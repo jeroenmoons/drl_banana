@@ -141,6 +141,14 @@ class DqnAgent(UnityAgent):
             # move target weights slightly closer to source weights.
             target_w.data.copy_(tau * source_w.data + (1.0 - tau) * target_w.data)
 
+    def save_checkpoint(self):
+        torch.save(self.online_network.state_dict(), 'saved_models/dqn_agent_checkpoint.pth')
+
+    def load_checkpoint(self, checkpoint):
+        weights = torch.load(checkpoint)
+        self.online_network.load_state_dict(weights)
+        self.target_network.load_state_dict(weights)
+
     def get_params(self):
         return {
             'device': self.device,

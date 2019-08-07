@@ -64,6 +64,7 @@ def train(env, agent):
         if not solved and avg_score > config.SOLVED_SCORE:
             print('Environment solved in {} iterations with a score of {}'.format(iterations, avg_score))
             solved = True
+            agent.save_checkpoint()
 
     print('Training ended with an avg score of {} over last 100 episodes'.format(scores_avg[-1]))
     plot_scores(scores, scores_avg)
