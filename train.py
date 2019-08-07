@@ -56,6 +56,8 @@ def train(env, agent):
 
             score += reward  # update score with the reward
 
+        scores.append(score)
+
         avg_score = np.mean(scores[-100:])
 
         if iterations % 100 == 0:
@@ -66,8 +68,6 @@ def train(env, agent):
                 print('Environment solved with a score of {}'.format(avg_score))
                 solved = True
 
-        # Keep track of scores for plotting
-        scores.append(score)
         scores_avg.append(avg_score)
 
     plot_scores(scores, scores_avg)
