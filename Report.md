@@ -33,9 +33,22 @@ I did some rudimentary manual grid search of the hyperparameter space and ended 
 
 My first solution considers the environment solved when reaching an average score of 13 over 100 episodes.
 
-The algorithm as outlined above reached a solution in about 500 iterations (well below the 1800 episodes the project 
-description mentions). The algorithm improves quite fast, but seems to reach a plateau at two points:
+The algorithm as outlined above reached a solution in about 400 iterations (well below the 1800 episodes the project 
+description mentions). 
 
+Training output:
+```
+Training agent.
+Iteration 100 - avg score of 4.29 over last 100 episodes
+Iteration 200 - avg score of 9.88 over last 100 episodes
+Iteration 300 - avg score of 10.87 over last 100 episodes
+Iteration 400 - avg score of 12.98 over last 100 episodes
+Environment solved in 401 iterations with a score of 13.01
+Training ended with an avg score of 13.01 over last 100 episodes
+Max score: 24.0
+```
+
+Plotted scores show a steep initial learning phase followed by a slower but steady increase to the goal of 13+ average:
 ![scores](assets/first_solution_scores.png)
 ![average scores](assets/first_solution_avg_scores.png)
 
