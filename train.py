@@ -56,13 +56,19 @@ def train(env, agent):
 
             score += reward  # update score with the reward
 
-        if iterations % 100 == 0:
-            mean = np.mean(scores[-100:])
-            print('Iteration {} - avg score of {} over last 100 episodes'.format(iterations, mean))
+        avg_score = np.mean(scores[-100:])
 
-        # Keep track of scores for plotting a running average and whether or not the env is solved
+        if iterations % 100 == 0:
+            print('Iteration {} - avg score of {} over last 100 episodes'.format(iterations, avg_score))
+
+            # if the environment is solved, stop training
+            if not solved and avg_score > config.SOLVED_SCORE:
+                print('Environment solved with a score of {}'.format(avg_score))
+                solved = True
+
+        # Keep track of scores for plotting
         scores.append(score)
-        scores_avg.append(np.mean(scores[-100:]))
+        scores_avg.append(avg_score)
 
     plot_scores(scores, scores_avg)
 
