@@ -56,21 +56,22 @@ def train(env, agent):
 
             score += reward  # update score with the reward
 
-        scores.append(score)
-
-        avg_score = np.mean(scores[-100:])
+        scores.append(score)  # keep track of the episode score
+        avg_score = np.mean(scores[-100:])  # calculate average score over the last 100 episodes
+        scores_avg.append(avg_score)  # keep track of the average score
 
         if iterations % 100 == 0:
+            # print periodic progress report
             print('Iteration {} - avg score of {} over last 100 episodes'.format(iterations, avg_score))
 
-            # if the environment is solved, stop training
-            if not solved and avg_score > config.SOLVED_SCORE:
-                print('Environment solved with a score of {}'.format(avg_score))
-                solved = True
-
-        scores_avg.append(avg_score)
+        # if the environment is solved, stop training
+        if not solved and avg_score > config.SOLVED_SCORE:
+            print('Environment solved with a score of {}'.format(avg_score))
+            solved = True
 
     plot_scores(scores, scores_avg)
+
+    print('Training ended with an avg score of {} over last 100 episodes'.format(scores_avg[-1]))
 
     return scores
 
@@ -118,5 +119,4 @@ if __name__ == '__main__':
     # Close the environment, no longer needed
     banana_env.close()
 
-    print("Last 100 scores: {}".format(result[-100:]))
     print("Max score: {}".format(np.array(result).max()))
