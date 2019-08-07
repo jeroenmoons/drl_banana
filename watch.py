@@ -5,7 +5,6 @@ import config
 from unityagents import UnityEnvironment
 
 from agent.factory import AgentFactory
-from agent.random import RandomAgent
 
 
 def run_episode(env, agent):
