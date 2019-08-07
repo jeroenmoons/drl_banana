@@ -29,11 +29,25 @@ I did some rudimentary manual grid search of the hyperparameter space and ended 
 
 ## Results
 
-# TODO
-* solved how fast? avg score?
-* score evolution?
-* pushing a bit further
-* gif of trained agent?
+### First solution
+
+My first solution considers the environment solved when reaching an average score of 13 over 100 episodes.
+
+The algorithm as outlined above reached a solution in about 500 iterations (well below the 1800 episodes the project 
+description mentions). The algorithm improves quite fast, but seems to reach a plateau at two points:
+
+![scores](assets/first_solution_scores.png)
+![average scores](assets/first_solution_avg_scores.png)
+
+TODO: gif of trained agent.
+
+### Second solution
+
+I then tried to squeeze a bit more out of the algorithm, both by trying to reach a higher average score within 1800 
+episodes and by playing with the parameters and network a bit more.
+
+* TODO: pushing a bit further - describe results.
+
 
 ## Ideas for future work
 

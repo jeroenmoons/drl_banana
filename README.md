@@ -10,7 +10,7 @@ More information on the algorithm, NN architecture and hyper-parameters can be f
 
 The environment consists of a closed room containing yellow and blue bananas. 
 
-![trained](assets/banana.gif)
+![env](assets/banana.gif)
 
 The goal is to find yellow bananas and avoid blue bananas. It is an episodic environment, the agent gets a fixed number 
 of steps in which to maximise its reward.
@@ -77,8 +77,14 @@ When the environment is solved, the training script saves a checkpoint in the sa
 
 #### Watching an agent
 
-TODO: how to run a random or trained agent using command line switch: random, dqn_checkpoint, dqn_solved
+To watch an agent perform a single episode, run the watch.py script and specify which agent you would like to see using
+the --agent option. Available choices are:
 
+* random: shows a perfectly stupid agent.
+* dqn_checkpoint: shows the last saved checkpoint reached during training
+* dqn_solved: shows the last solution reached by the training script
+
+Example: ```python watch.py --agent=dqn_solved```
 
 ---
 _This project is part of my Udacity DRL Nanodegree_
