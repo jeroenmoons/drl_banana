@@ -73,11 +73,11 @@ you an agent performing a single episode.
 To train a new agent, run the train.py script. It currently only supports training a DQN agent so no command line 
 arguments are necessary.
 
-TODO: describe checkpoints.
+When the environment is solved, the training script saves a checkpoint in the saved_models directory.
 
 #### Watching an agent
 
-TODO: how to run a random or trained agent using command line switch.
+TODO: how to run a random or trained agent using command line switch: random, dqn_checkpoint, dqn_solved
 
 
 ---

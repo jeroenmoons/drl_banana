@@ -1,6 +1,8 @@
 import config
 
 from unityagents import UnityEnvironment
+
+from agent.factory import AgentFactory
 from agent.random import RandomAgent
 
 
@@ -39,8 +41,9 @@ if __name__ == '__main__':
     env_info = banana_env.reset(train_mode=True)[brain_name]
     state_size = len(env_info.vector_observations[0])
 
-    # Create a random agent - TODO: switch between random and trained using command line argument
-    agent = RandomAgent(brain_name, state_size, action_size, {})
+    # Create agent - TODO: switch between random and trained using command line argument
+    agent_factory = AgentFactory()
+    agent = agent_factory.create_agent('random', brain_name, state_size, action_size)
 
     # Run the agent inside the Banana environment
     result = run_episode(banana_env, agent)
