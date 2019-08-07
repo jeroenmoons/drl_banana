@@ -78,4 +78,6 @@ a few tweaks (or the full rainbow DQN) would almost certainly result in quicker 
     * noisy networks could be an interesting alternative for the epsilon parameter
 
 4. Solving the problem from pixels instead of the ray traced state vectors, as suggested by the Udacity project 
-description would be an interesting exercise.
+description would be an interesting exercise, mainly because I suspect the agent would be more intelligent regarding
+batches of bananas perceived in the distance (the agent using vector states only sees what's right in front of it).
+I think it would learn to see a cluster of yellow bananas and decide it is worth the trip.
