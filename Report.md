@@ -181,7 +181,7 @@ incorporate tensorboard for easier live monitoring and training dynamics compari
 5. Investigate the **tau** parameter to see if training can be more stable over longer time horizons (I found it 
 oscillating when run for several thousands of episodes).
 
-6. Solving the problem from pixels instead of the ray traced state vectors, as suggested by the Udacity project 
+6. Solving the problem **from pixels** instead of the ray traced state vectors, as suggested by the Udacity project 
 description would be an interesting exercise, mainly because I suspect the agent would be more intelligent regarding
 batches of bananas perceived in the distance. The agent using vector states only sees what's right in front of it and 
 its view of a cluster of yellow bananas in the distance seems to be blocked by any blue bananas in front of it. I think 
@@ -189,5 +189,5 @@ it might learn to see a cluster of yellow bananas in the distance and decide it 
 the one banana closer by but in the opposite direction.
 
 7. Watching the trained agent perform I often notice superfluous actions (lots of left and right movements that are not 
-strictly necessary), I would like to push on to get more stable and elegant behaviour. (The reward model does not 
+strictly necessary), I would like to push on to get **more stable and elegant behaviour**. (The reward model does not 
 explicitly punish excess movement but my intuition is that it should be possible anyway.)
