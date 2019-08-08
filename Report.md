@@ -13,7 +13,7 @@ the DQN algorithm.
 Spoiler alert: I was able to solve the stated goal of 13+ average score within 200 episodes. I was also able to push the 
 goal post further up to an average score of 16.5.
 
-The trained agent: (TODO: add gif)
+![pretrained](assets/pretrained.gif)
 
 ### 1. Initial solution
 
