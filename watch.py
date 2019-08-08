@@ -29,7 +29,7 @@ if __name__ == '__main__':
     Watch an agent during a single episode.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--agent', default='random', help='agent to watch (random, dqn_checkpoint, dqn_solved)')
+    parser.add_argument('--agent', default='random', help='random, dqn_checkpoint, dqn_solved or dqn_pretrained')
     args = parser.parse_args()
 
     agent_type = args.agent
