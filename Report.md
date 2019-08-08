@@ -84,7 +84,7 @@ I did some rudimentary manual grid search of the hyper-parameter space and ended
 * **epsilon**: starts at 1, decays with factor .9999, bottoms out at 0.01 
   _-> increasing epsilon_min results in a lower average training score because there is too much exploration_
 * **tau**: 0.001
-  _-> I didn't experiment with this parameter, didn't think this would have a large impact_
+  _-> I didn't experiment with this parameter, see 'further work' section_
   
 #### Q-network architecture
 
@@ -93,8 +93,8 @@ different configurations I found that a network with smaller hidden layers worke
 
 The smaller network looks like this:
 * input of size 37 (state vector size)
-* FC hidden layer of size 20
-* FC hidden layer of size 20
+* FC hidden layer of size 25
+* FC hidden layer of size 25
 * FC output layer of size 4 (action space size)
 
 The algorithm as outlined above reached a solution for the original goal of 13+ in less than 200 iterations. It seems to 
@@ -117,8 +117,24 @@ This goal is reached easily, often within 200 episodes.
 
 _Training output on the harder goal of 16.5+:_
 ```
-TODO
+Training agent.
+Iteration 100 - avg score of 6.07 over last 100 episodes
+Iteration 200 - avg score of 12.77 over last 100 episodes
+Iteration 300 - avg score of 13.82 over last 100 episodes
+Iteration 400 - avg score of 14.08 over last 100 episodes
+Iteration 500 - avg score of 14.84 over last 100 episodes
+Iteration 600 - avg score of 15.88 over last 100 episodes
+Environment solved in 635 iterations with a score of 16.52
+Training ended with an avg score of 16.52 over last 100 episodes
+Max score: 30.0
 ```
+
+![scores](assets/target_16.5_nn_25_25_scores_run3.png)
+![average scores](assets/target_16.5_nn_25_25_avg_scores_run3.png)
+
+
+The goal of 16.5+ was usually reached in 600-800 episodes, but I never got much higher than that. I suppose I'm 
+confronted with the limitations of vanilla DQN here.
 
 ---
 ## Further findings
@@ -127,7 +143,8 @@ TODO
 * Setting alpha a factor of 100 higher results in the algorithm not learning at all.
 * Setting alpha higher than my initial setting of 5e^-4 would slow down learning, dropping it would speed up learning 
 and allow reaching a score of 15+ in about 450 episodes.
-* I tried a single-layer network of size 42 (no coincidence :-)) which performed similarly to the 20/20 network.
+* I tried a single-layer network of size 42 (no coincidence :-)) which performed similarly to the 20/20 network. I tried 
+to bring down the 2-hidden-layer version to 10/10 but this seemed to lack the capacity needed to master the environment.
 * Even when the environment is solved, the trained agent's performance seems quite inconsistent (see next section).
 
 

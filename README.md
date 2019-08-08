@@ -72,7 +72,7 @@ you an agent performing a single episode.
 #### 1. `train.py` - Training an agent
 
 To train a new agent, run the `train.py` script. It currently only supports training a DQN agent so no command line 
-arguments are necessary.
+arguments are necessary. (Training parameters are set in config.py and the agent/factory.py module.)
 
 When the environment is solved, the training script saves a checkpoint in the saved_models directory. During training, a 
 checkpoint is saved every 100 iterations as wel. Both can be loaded with the watch script (see next point).
@@ -84,8 +84,8 @@ the `--agent` option. Available choices are:
 
 * `random`: shows a perfectly stupid agent.
 * `dqn_pretrained`: shows a pre-trained agent.
-* `dqn_checkpoint`: shows the last saved checkpoint reached during training
-* `dqn_solved`: shows the last solution reached by the training script
+* `dqn_checkpoint`: shows the last saved checkpoint reached during training.
+* `dqn_solved`: shows the last solution reached by the training script.
 
 Example: ```python watch.py --agent=dqn_pretrained```
 
