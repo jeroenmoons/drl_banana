@@ -15,7 +15,7 @@ goal post further up to an average score of 16.5.
 
 The trained agent: (TODO: add gif)
 
-### 1. First solution
+### 1. Initial solution
 
 My first solution considers the environment solved when reaching an average score of 13+ over 100 episodes, as stated in 
 the project requirements.
@@ -32,7 +32,7 @@ I initially used parameters very similar to the lander environment treated in cl
 * **Explore-exploit parameter epsilon**: starts at 1, decays with factor .9999, bottoms out at 0.01
 * **Target network soft-update parameter tau**: 0.001
 
-#### Q network architecture
+#### Q-network architecture
 
 A simple fully connected network with two hidden layers sufficed to solve the environment quickly. (The extra 
 convolutional layers used in the Deepmind paper are probably not really necessary since we're not dealing with 
@@ -75,19 +75,19 @@ with the parameters and network a bit more. I set out to reach a higher score wi
 I did some rudimentary manual grid search of the hyper-parameter space and ended up with the following:
 
 * **alpha**: 0.0001 
-  -> I made this 5 times smaller, sped up training quite a bit and resulted in a convergence score
+  _-> I made this 5 times smaller, sped up training and resulted in a higher convergence score (better generalisation?)_
 * **gamma**: 0.99 
-  -> seems to have little effect as long as it is sufficiently large, since this is an episodic task we can see the end
+  _-> seems to have little effect as long as it is near 1, since this is an episodic task we can see the end_
 * **learning batch size**: 100 
-  -> increasing this boosts learning speed, see 'further work' section below
+  _-> increasing this boosts learning speed, see 'further work' section below_
 * **replay buffer size**: 10^5 
-  -> as long as it is large enough this seems to have little effect
+  _-> as long as it is large enough this seems to have little effect_
 * **epsilon**: starts at 1, decays with factor .9999, bottoms out at 0.01 
-  -> increasing epsilon_min results in a lower average training score because there is too much exploration
+  _-> increasing epsilon_min results in a lower average training score because there is too much exploration_
 * **tau**: 0.001
-  -> I didn't experiment with this parameter, didn't think this would have a large impact
+  _-> I didn't experiment with this parameter, didn't think this would have a large impact_
   
-#### Q network architecture
+#### Q-network architecture
 
 Playing with the network architecture revealed better performance with an even smaller network. After trying a number of 
 different configurations I found that a network with smaller hidden layers worked better than my original version.
@@ -101,16 +101,29 @@ The smaller network looks like this:
 The algorithm as outlined above reached a solution for the original goal of 13+ in less than 200 iterations. It seems to 
 max out around 16.5 which it is able to reach in about
 
-Training output (TODO):
+_Training output on the original goal of 13+:_
+```
+Training agent.
+Iteration 100 - avg score of 7.01 over last 100 episodes
+Environment solved in 172 iterations with a score of 13.08
+Training ended with an avg score of 13.08 over last 100 episodes
+Max score: 24.0
 ```
 
-```
+![average scores](assets/target_13_nn_25_25_avg_scores.png)
 
+This goal is reached easily, often within 200 episodes.
+
+
+_Training output on the harder goal of 16.5+:_
+```
+TODO
+```
 
 ---
 ## Further findings
 
-* I could reach an average score of about 16.5 but not much higher (never reached 17, whatever I tried)
+* With vanilla DQN I could reach an average score of about 16.5 but not much higher (never reached 17, whatever I tried)
 * Setting alpha a factor of 100 higher results in the algorithm not learning at all.
 * Setting alpha higher than my initial setting of 5e^-4 would slow down learning, dropping it would speed up learning 
 and allow reaching a score of 15+ in about 450 episodes.
