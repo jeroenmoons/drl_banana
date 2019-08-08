@@ -34,7 +34,7 @@ class AgentFactory:
             'epsilon': 1.,
             'epsilon_decay': 0.9999,
             'epsilon_min': 0.01,
-            'hidden_layer_sizes': (20, 20)
+            'hidden_layer_sizes': (25, 25)
         }
 
         agent = DqnAgent(brain_name, state_size, action_size, agent_params)
