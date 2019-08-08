@@ -8,13 +8,15 @@ problem is quite easily solvable using tiling as well though.
 
 ## Q network architecture
 
-A simple fully connected network with two hidden layers sufficed to solve the environment within 500 episodes.
+A simple fully connected network with two hidden layers sufficed to solve the environment within 500 episodes. (The 
+extra convolutional layers used in the Deepmind paper are probably not really necessary since we're not dealing with 
+images)
 
 It looks like this:
-* input layer of size 37 (state vector size)
-* hidden layer of size 64
-* hidden layer of size 64
-* output layer of size 4 (action space size)
+* input of size 37 (state vector size)
+* FC hidden layer of size 64
+* FC hidden layer of size 64
+* FC output layer of size 4 (action space size)
 
 ## Hyperparameters
 
