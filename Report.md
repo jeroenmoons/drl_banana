@@ -47,11 +47,6 @@ It looks like this:
 | hidden (FC)   | 64                     |
 | output (FC)   | 4 (action space size)  |
 
-* input of size 37 (state vector size)
-* FC hidden layer of size 64
-* FC hidden layer of size 64
-* FC output layer of size 4 (action space size)
-
 The algorithm as outlined above reached a solution in about 400 iterations (well below the 1800 episodes the project 
 description mentions as a reference). 
 
