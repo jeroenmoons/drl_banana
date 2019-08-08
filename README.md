@@ -18,6 +18,7 @@ of steps in which to maximise its reward.
 The environment is considered to be solved if an agent gets an average reward of at least 13 over 100 episodes.
 
 ### Rewards
+
 A reward of +1 is earned by catching a yellow banana. 
 A penalty of -1 is given for catching a blue banana. 
 Reward at all other times is 0.
@@ -25,11 +26,13 @@ Reward at all other times is 0.
 This embodies the goal of catching as many yellow bananas as possible and avoiding the blue ones.
 
 ### State space
+
 The state space is continuous. It consists of vectors of size 37, specifying the agent's velocity and a ray-traced 
 representation of the agent's local field of vision. It specifies presence of any objects under a number of fixed angles 
 in front of the agent.
 
 ### Action space
+
 The action space is discrete and consists of four options:
 * go forward (0)
 * go backward (1)
@@ -38,7 +41,6 @@ The action space is discrete and consists of four options:
 
 
 ## Getting started
-
 ### Installation
 
 The project requires Python 3, PyTorch 0.4, the Unity ML API and the Unity ML environment which you can unzip in this 
@@ -67,24 +69,25 @@ ENV_APP constant in `config.py`.
 The project is run from the command line. There are two entry points. One trains an agent from scratch, the other shows 
 you an agent performing a single episode.
 
+#### 1. `train.py` - Training an agent
 
-#### Training an agent
-
-To train a new agent, run the train.py script. It currently only supports training a DQN agent so no command line 
+To train a new agent, run the `train.py` script. It currently only supports training a DQN agent so no command line 
 arguments are necessary.
 
-When the environment is solved, the training script saves a checkpoint in the saved_models directory.
+When the environment is solved, the training script saves a checkpoint in the saved_models directory. During training, a 
+checkpoint is saved every 100 iterations as wel. Both can be loaded with the watch script (see next point).
 
-#### Watching an agent
+#### 2. `watch.py` - Watching an agent
 
-To watch an agent perform a single episode, run the watch.py script and specify which agent you would like to see using
-the --agent option. Available choices are:
+To watch an agent perform a single episode, run the `watch.py` script and specify which agent you would like to see using
+the `--agent` option. Available choices are:
 
-* random: shows a perfectly stupid agent.
-* dqn_checkpoint: shows the last saved checkpoint reached during training
-* dqn_solved: shows the last solution reached by the training script
+* `random`: shows a perfectly stupid agent.
+* `dqn_pretrained`: shows a pre-trained agent.
+* `dqn_checkpoint`: shows the last saved checkpoint reached during training
+* `dqn_solved`: shows the last solution reached by the training script
 
-Example: ```python watch.py --agent=dqn_solved```
+Example: ```python watch.py --agent=dqn_pretrained```
 
 ---
 _This project is part of my Udacity DRL Nanodegree_
