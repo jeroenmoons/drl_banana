@@ -39,6 +39,14 @@ convolutional layers used in the Deepmind paper are probably not really necessar
 images.)
 
 It looks like this:
+
+| Layer         | Size                   |
+| ------------- | -----------------------|
+| input         | 37 (state vector size) |
+| hidden (FC)   | 64                     |
+| hidden (FC)   | 64                     |
+| output (FC)   | 4 (action space size)  |
+
 * input of size 37 (state vector size)
 * FC hidden layer of size 64
 * FC hidden layer of size 64
@@ -92,10 +100,13 @@ Playing with the network architecture revealed better performance with an even s
 different configurations I found that a network with smaller hidden layers worked better than my original version.
 
 The smaller network looks like this:
-* input of size 37 (state vector size)
-* FC hidden layer of size 25
-* FC hidden layer of size 25
-* FC output layer of size 4 (action space size)
+
+| Layer         | Size                   |
+| ------------- | -----------------------|
+| input         | 37 (state vector size) |
+| hidden (FC)   | 25                     |
+| hidden (FC)   | 25                     |
+| output (FC)   | 4 (action space size)  |
 
 The algorithm as outlined above reached a solution for the original goal of 13+ in less than 200 iterations. It seems to 
 max out around 16.5 which it is able to reach in about
