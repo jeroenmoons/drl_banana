@@ -15,6 +15,8 @@ class AgentFactory:
             return self.create_dqn_agent(brain_name, state_size, action_size, checkpoint='dqn_agent_checkpoint.pth')
         elif agent_type == 'dqn_solved':
             return self.create_dqn_agent(brain_name, state_size, action_size, checkpoint='dqn_agent_solved.pth')
+        elif agent_type == 'dqn_pretrained':
+            return self.create_dqn_agent(brain_name, state_size, action_size, checkpoint='dqn_agent_pretrained.pth')
         else:
             raise ValueError('Unknown agent type {}'.format(agent_type))
 
