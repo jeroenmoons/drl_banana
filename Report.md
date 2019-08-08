@@ -104,7 +104,7 @@ The smaller network looks like this:
 | output (FC)   | 4 (action space size)  |
 
 The algorithm as outlined above reached a solution for the original goal of 13+ in less than 200 iterations. It seems to 
-max out around 16.5 which it is able to reach in about
+max out around 16.5 which it is able to reach in about 650 episodes.
 
 _Training output on the original goal of 13+:_
 ```
