@@ -16,7 +16,7 @@ class AgentFactory:
         elif agent_type == 'dqn_solved':
             return self.create_dqn_agent(brain_name, state_size, action_size, checkpoint='dqn_agent_solved.pth')
         elif agent_type == 'dqn_pretrained':
-            return self.create_dqn_agent(brain_name, state_size, action_size, checkpoint='dqn_agent_pretrained.pth')
+            return self.create_pretrained_dqn_agent(brain_name, state_size, action_size)
         else:
             raise ValueError('Unknown agent type {}'.format(agent_type))
 
@@ -28,18 +28,36 @@ class AgentFactory:
         """Creates a DQN agent with the params specified below, optionally loads network weights from checkpoint."""
         agent_params = {
             'device': config.PYTORCH_DEVICE,
-            'alpha': 5e-4,
+            'alpha': 1e-4,
             'gamma': 0.99,
             'learn_batch_size': 100,
             'epsilon': 1.,
             'epsilon_decay': 0.9999,
             'epsilon_min': 0.01,
-            'hidden_layer_sizes': (64, 64)
+            'hidden_layer_sizes': (20, 20)
         }
 
         agent = DqnAgent(brain_name, state_size, action_size, agent_params)
 
         if checkpoint is not None:
             agent.load_checkpoint('saved_models/{}'.format(checkpoint))
+
+        return agent
+
+    def create_pretrained_dqn_agent(self, brain_name, state_size, action_size, checkpoint=None):
+        """Creates a pre-trained DQN agent."""
+        agent_params = {
+            'device': config.PYTORCH_DEVICE,
+            'alpha': 1e-4,
+            'gamma': 0.99,
+            'learn_batch_size': 100,
+            'epsilon': 1.,
+            'epsilon_decay': 0.9999,
+            'epsilon_min': 0.01,
+            'hidden_layer_sizes': (25, 25)
+        }
+
+        agent = DqnAgent(brain_name, state_size, action_size, agent_params)
+        agent.load_checkpoint('saved_models/dqn_agent_pretrained.pth')
 
         return agent
