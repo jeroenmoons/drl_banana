@@ -151,7 +151,7 @@ confronted with the limitations of vanilla DQN here.
 * Setting alpha a factor of 100 higher results in the algorithm not learning at all.
 * Setting alpha higher than my initial setting of 5e^-4 would slow down learning, dropping it would speed up learning 
 and allow reaching a score of 15+ in about 450 episodes.
-* I tried a single-layer network of size 42 (no coincidence :-)) which performed similarly to the 20/20 network. I tried 
+* I tried a single-layer network of size 42 (no coincidence :-)) which performed similarly to the 25/25 network. I tried 
 to bring down the 2-hidden-layer version to 10/10 but this seemed to lack the capacity needed to master the environment.
 * Even when the environment is solved, the trained agent's performance seems quite inconsistent (see next section).
 
