@@ -14,6 +14,7 @@ Spoiler alert: I was able to solve the stated goal of 13+ average score within 2
 goal post further up to an average score of 16.5.
 
 ![pretrained](assets/pretrained.gif)
+_a trained agent_
 
 ### 1. Initial solution
 
