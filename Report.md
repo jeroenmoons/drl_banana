@@ -144,7 +144,7 @@ Max score: 30.0
 The goal of 16.5+ was usually reached in 600-800 episodes, but I never got much higher than that. I suppose I'm 
 confronted with the limitations of vanilla DQN here.
 
----
+
 ## Further findings
 
 * With vanilla DQN I could reach an average score of about 16.5 but not much higher (never reached 17, whatever I tried)
