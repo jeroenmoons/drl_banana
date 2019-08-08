@@ -1,30 +1,10 @@
 import config
 
-import time
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from unityagents import UnityEnvironment
-from agent.dqn import DqnAgent
 from agent.factory import AgentFactory
-
-
-def get_agent(brain_name, state_size, action_size):
-    """
-    Builds the UnityAgent object to train.
-    """
-    agent_params = {
-        'device': config.PYTORCH_DEVICE,
-        'alpha': 5e-4,
-        'gamma': 0.99,
-        'learn_batch_size': 100,
-        'epsilon': 1.,
-        'epsilon_decay': 0.9999,
-        'epsilon_min': 0.01,
-        'hidden_layer_sizes': (64, 64)
-    }
-
-    return DqnAgent(brain_name, state_size, action_size, agent_params)
 
 
 def train(env, agent):
@@ -36,7 +16,7 @@ def train(env, agent):
     scores = []
     scores_avg = []
     iterations = 0
-    solved = False  # TODO
+    solved = False
 
     print('Training agent.')
 
