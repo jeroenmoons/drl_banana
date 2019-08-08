@@ -14,4 +14,4 @@ MAX_ITERATIONS = 1800  # maximum number of episodes to train on
 MAX_EPISODE_STEPS = 5000  # cap the maximum steps within an episode
 
 # Average score over 100 episodes to be reached to solve the environment
-SOLVED_SCORE = 15
+SOLVED_SCORE = 16.5
