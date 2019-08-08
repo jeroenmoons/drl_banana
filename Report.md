@@ -69,7 +69,6 @@ Plotted scores show a steep initial learning phase followed by a slower but stea
 I then tried to squeeze a bit more out of the algorithm, both by trying to reach a higher average score and by playing 
 with the parameters and network a bit more. I set out to reach a higher score within 1800 episodes.
 
-
 #### Hyperparameters
 
 I did some rudimentary manual grid search of the hyper-parameter space and ended up with the following:
@@ -110,6 +109,7 @@ Training ended with an avg score of 13.08 over last 100 episodes
 Max score: 24.0
 ```
 
+![scores](assets/target_13_nn_25_25_scores.png)
 ![average scores](assets/target_13_nn_25_25_avg_scores.png)
 
 This goal is reached easily, often within 200 episodes.
@@ -153,7 +153,10 @@ incorporate tensorboard for easier live monitoring and training dynamics compari
     * double DQN might learn more efficiently
     * noisy networks could be an interesting alternative for the epsilon parameter
 
-5. Solving the problem from pixels instead of the ray traced state vectors, as suggested by the Udacity project 
+5. Investigate the **tau** parameter to see if training can be more stable over longer time horizons (I found it 
+oscillating when run for several thousands of episodes).
+
+6. Solving the problem from pixels instead of the ray traced state vectors, as suggested by the Udacity project 
 description would be an interesting exercise, mainly because I suspect the agent would be more intelligent regarding
 batches of bananas perceived in the distance. The agent using vector states only sees what's right in front of it and 
 its view of a cluster of yellow bananas in the distance seems to be blocked by any blue bananas in front of it. I think 
